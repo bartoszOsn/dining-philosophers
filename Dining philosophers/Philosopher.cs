@@ -8,19 +8,14 @@ namespace Dining_philosophers
     class Philosopher
     {
         /// <summary>
-        /// Widelec będący po lewej stronie filozofa.
+        /// ogół widelców.
         /// </summary>
-        Semaphore leftFork;
-
-        /// <summary>
-        /// Widelec będący po prawej stronie filozofa.
-        /// </summary>
-        Semaphore rightFork;
+        Semaphore[] forks;
 
         /// <summary>
         /// Stół wspólny dla wszystkich filozofów.
         /// </summary>
-        Semaphore table;
+        Table table;
 
         /// <summary>
         /// Semafor reprezentujący zbiór książek.
@@ -41,10 +36,9 @@ namespace Dining_philosophers
         /// <param name="books">Semafor reprezentujący zbiór książek.</param>
         /// <param name="seat">Numer siedzienia filozofa.</param>
         /// <param name="index">Indeks filozofa.</param>
-        public Philosopher(Semaphore leftFork, Semaphore rightFork, Semaphore table, Semaphore books, int index)
+        public Philosopher(Semaphore[] forks, Table table, Semaphore books, int index)
         {
-            this.leftFork = leftFork;
-            this.rightFork = rightFork;
+            this.forks = forks;
             this.table = table;
             this.books = books;
             this.index = index;
@@ -58,7 +52,7 @@ namespace Dining_philosophers
             while(true)
             {
                 this.Think();
-                this.Eat();
+                this.SitAndEat();
             }
         }
 
@@ -68,19 +62,26 @@ namespace Dining_philosophers
             Thread.Sleep(1000);
         }
 
-        private void Eat()
+        private void SitAndEat()
+        {
+            int seat = table.TakeSeat();
+            Semaphore leftFork = forks[seat];
+            Semaphore rightFork = forks[(seat + 1) % forks.Length];
+            this.Eat(seat, leftFork, rightFork);
+            table.FreeSeat(seat);
+        }
+
+        private void Eat(int seat, Semaphore leftFork, Semaphore rightFork)
         {
             //TODO: książki
-            table.WaitOne();
             books.WaitOne();
             leftFork.WaitOne();
             rightFork.WaitOne();
-            SetStatus("Eating");
+            SetStatus($"Eating [Seat: {seat}]");
             Thread.Sleep(1000);
             rightFork.Release();
             leftFork.Release();
             books.Release();
-            table.Release();
         }
 
         /// <summary>
