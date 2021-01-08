@@ -28,11 +28,6 @@ namespace Dining_philosophers
         Semaphore books;
 
         /// <summary>
-        /// Numer siedzienia filozofa.
-        /// </summary>
-        int seat;
-
-        /// <summary>
         /// Indeks filozofa - używany do wypisywania statusu filozofa ("Eating"/"Thinking") w odpowiedniej kolejności.
         /// </summary>
         int index;
@@ -46,13 +41,12 @@ namespace Dining_philosophers
         /// <param name="books">Semafor reprezentujący zbiór książek.</param>
         /// <param name="seat">Numer siedzienia filozofa.</param>
         /// <param name="index">Indeks filozofa.</param>
-        public Philosopher(Semaphore leftFork, Semaphore rightFork, Semaphore table, Semaphore books, int seat, int index)
+        public Philosopher(Semaphore leftFork, Semaphore rightFork, Semaphore table, Semaphore books, int index)
         {
             this.leftFork = leftFork;
             this.rightFork = rightFork;
             this.table = table;
             this.books = books;
-            this.seat = seat;
             this.index = index;
         }
 
@@ -95,7 +89,7 @@ namespace Dining_philosophers
         /// <param name="status">"Eating"/"Thinking"</param>
         private void SetStatus(string status)
         {
-            Helpers.WriteAt($"Philosopher #{index}:\t{status}".PadRight(Console.WindowWidth - 1, ' '), 0, seat);
+            Helpers.WriteAt($"Philosopher #{index}:\t{status}".PadRight(Console.WindowWidth - 1, ' '), 0, index);
         }
     }
 }

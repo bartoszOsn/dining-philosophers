@@ -54,7 +54,7 @@ namespace Dining_philosophers
             for(int i = 0; i < n; i++)
             {
                 //TODO: losowe miejsca
-                philosophers[i] = new Philosopher(forks[i], forks[(i + 1) % n], table, books, i, i);
+                philosophers[i] = new Philosopher(forks[i], forks[(i + 1) % n], table, books, i);
             }
             return philosophers;
         }
