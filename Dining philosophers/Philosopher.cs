@@ -23,6 +23,11 @@ namespace Dining_philosophers
         Semaphore table;
 
         /// <summary>
+        /// Semafor reprezentujący zbiór książek.
+        /// </summary>
+        Semaphore books;
+
+        /// <summary>
         /// Numer siedzienia filozofa.
         /// </summary>
         int seat;
@@ -38,13 +43,15 @@ namespace Dining_philosophers
         /// <param name="leftFork">Widelec będący po lewej stronie filozofa.</param>
         /// <param name="rightFork">Widelec będący po prawej stronie filozofa.</param>
         /// <param name="table">Stół wspólny dla wszystkich filozofów.</param>
+        /// <param name="books">Semafor reprezentujący zbiór książek.</param>
         /// <param name="seat">Numer siedzienia filozofa.</param>
         /// <param name="index">Indeks filozofa.</param>
-        public Philosopher(Semaphore leftFork, Semaphore rightFork, Semaphore table, int seat, int index)
+        public Philosopher(Semaphore leftFork, Semaphore rightFork, Semaphore table, Semaphore books, int seat, int index)
         {
             this.leftFork = leftFork;
             this.rightFork = rightFork;
             this.table = table;
+            this.books = books;
             this.seat = seat;
             this.index = index;
         }
@@ -71,12 +78,14 @@ namespace Dining_philosophers
         {
             //TODO: książki
             table.WaitOne();
+            books.WaitOne();
             leftFork.WaitOne();
             rightFork.WaitOne();
             SetStatus("Eating");
             Thread.Sleep(1000);
             rightFork.Release();
             leftFork.Release();
+            books.Release();
             table.Release();
         }
 

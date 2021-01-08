@@ -10,11 +10,15 @@ namespace Dining_philosophers
         {
             //liczba filozofów
             const int n = 5;
+
+            //liczba książek
+            const int k = 3;
             
             //tworzy widelce, stół oraz samych filozofów
             Semaphore[] forks = CreateForks(n);
             Semaphore table = new Semaphore(n-1, n - 1);
-            Philosopher[] philosophers = CreatePhilosophers(n, forks, table);
+            Semaphore books = new Semaphore(k, k);
+            Philosopher[] philosophers = CreatePhilosophers(n, forks, table, books);
 
             //tworzy wątków oraz je rozpoczyna
             Thread[] threads = philosophers.Select(t => new Thread(t.ThreadMethod)).ToArray();
@@ -44,13 +48,13 @@ namespace Dining_philosophers
         /// <param name="n">liczba filozofów</param>
         /// <param name="forks">tablica widelców. jej wielkość musi wynosić tyle samo co <c>n</c></param>
         /// <param name="table">semafor reprezentujący stół</param>
-        private static Philosopher[] CreatePhilosophers(int n, Semaphore[] forks, Semaphore table)
+        private static Philosopher[] CreatePhilosophers(int n, Semaphore[] forks, Semaphore table, Semaphore books)
         {
             Philosopher[] philosophers = new Philosopher[n];
             for(int i = 0; i < n; i++)
             {
                 //TODO: losowe miejsca
-                philosophers[i] = new Philosopher(forks[i], forks[(i + 1) % n], table, i, i);
+                philosophers[i] = new Philosopher(forks[i], forks[(i + 1) % n], table, books, i, i);
             }
             return philosophers;
         }
