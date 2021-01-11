@@ -29,6 +29,10 @@ namespace Dining_philosophers
             Semaphore = new Semaphore(seatCount - 1, seatCount - 1);
         }
 
+        /// <summary>
+        /// Zajmuje jedno wolne, losowe miejsce przy stole.
+        /// </summary>
+        /// <returns>indeks miejsca.</returns>
         public int TakeSeat()
         {
             Semaphore.WaitOne();
@@ -38,6 +42,10 @@ namespace Dining_philosophers
             return index;
         }
 
+        /// <summary>
+        /// zwalnia miejsce
+        /// </summary>
+        /// <param name="seat">indeks miejsca, które ma zostać zwolnione</param>
         public void FreeSeat(int seat)
         {
             seats[seat] = true;
